@@ -45,6 +45,6 @@ public class FishSpawner : MonoBehaviour
     {
         Vector2 randomPointInSphere = Random.insideUnitCircle.normalized;
         Vector3 spawnPosition = new Vector3(randomPointInSphere.x, 0f, randomPointInSphere.y) * Random.Range(MinSpawnRadius, MaxSpawnRadius);
-        Instantiate(_fishPrefabs[0], spawnPosition, Quaternion.identity);
+        Instantiate(_fishPrefabs[0], spawnPosition, Quaternion.identity, transform);
     }
 }

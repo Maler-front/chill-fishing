@@ -1,12 +1,9 @@
 using System;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInputModel : MonoBehaviour
 {
-    public static PlayerInput Instance { get; private set; }
-
-    [SerializeField]
-    private GameObject _boat;
+    public static PlayerInputModel Instance { get; private set; }
 
     public bool ScreenTouched { get; private set; }
     private Vector2 _firstTouch;
