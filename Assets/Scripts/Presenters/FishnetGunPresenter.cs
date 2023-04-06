@@ -1,47 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(FishnetFactory), typeof(LineRenderer))]
-public class FishnetGunPresenter : MonoBehaviour
+public class FishnetGunPresenter : IPresenter, IRemovable
 {
-    [SerializeField]
-    [Range(0.01f, 0.5f)]
-    private float _simulationDeltaTime;
-    [SerializeField]
-    private float _maxForce;
-    [SerializeField]
-    private float _minForce;
-    [SerializeField]
-    private float _forceCoefficientForPlayer;
-    [SerializeField]
-    [Range(0.01f, 89.99f)]
-    private float _fireAngle;
-
     private FishnetGunModel _fishnetGunModel;
     private FishnetGunView _fishnetGunView;
-    private FishnetFactory _fishnetFactory;
+    private FishnetSpawner _fishnetSpawner;
 
-    private void Start()
+    private GameObject _simulatingFishnet;
+
+    public FishnetGunPresenter(FishnetGunView fishnetGunView, FishnetGunModel fishnetGunModel, FishnetSpawner fishnetSpawner)
     {
-        _fishnetFactory = GetComponent<FishnetFactory>();
-        _fishnetGunView = gameObject.AddComponent<FishnetGunView>();
-        _fishnetGunModel = new FishnetGunModel(
-            _simulationDeltaTime,
-            _maxForce,
-            _minForce,
-            _forceCoefficientForPlayer,
-            _fireAngle
-            );
+        _fishnetGunView = fishnetGunView;
+        _fishnetGunModel = fishnetGunModel;
+        _fishnetSpawner = fishnetSpawner;
+
         Activate();
     }
 
-    private void OnDisable()
+    public void Activate()
     {
-        Deactivate();
-    }
-
-    private void Activate()
-    {
-        PlayerInputModel playerInput = PlayerInputModel.Instance;
+        PlayerInput playerInput = PlayerInput.Instance;
         playerInput.OnFingerMoved += PlayerInputModel_OnFingerMoved;
         playerInput.OnScreenUntouched += PlayerInputModel_OnScreenUntouched;
         playerInput.OnScreenTouched += PlayerInputModel_OnScreenTouched;
@@ -50,9 +29,9 @@ public class FishnetGunPresenter : MonoBehaviour
         _fishnetGunModel.OnSimulationEnd += FishnetGunModel_OnSimulationEnd;
     }
 
-    private void Deactivate()
+    public void Deactivate()
     {
-        PlayerInputModel playerInput = PlayerInputModel.Instance;
+        PlayerInput playerInput = PlayerInput.Instance;
         playerInput.OnFingerMoved -= PlayerInputModel_OnFingerMoved;
         playerInput.OnScreenUntouched -= PlayerInputModel_OnScreenUntouched;
         playerInput.OnScreenTouched -= PlayerInputModel_OnScreenTouched;
@@ -61,28 +40,31 @@ public class FishnetGunPresenter : MonoBehaviour
         _fishnetGunModel.OnSimulationEnd -= FishnetGunModel_OnSimulationEnd;
     }
 
-    private void PlayerInputModel_OnFingerMoved(object sender, PlayerInputModel.OnFingerMoovingEventArgs e)
+    private void PlayerInputModel_OnFingerMoved(object sender, PlayerInput.OnFingerMoovingEventArgs e)
     {
-        GameObject fishnet = _fishnetFactory.CreateFishnet(isFishnetNeedToBeSimuleted: true);
+        GameObject fishnet = _fishnetSpawner.CreateFishnet(isFishnetNeedToBeSimuleted: true);
+        _simulatingFishnet = fishnet;
+
         _fishnetGunView.ReDraw(
             _fishnetGunModel.SimulateFishnetPath(
                 fishnet,
                 e
                 )
             );
-        Destroy(fishnet);
     }
 
-    private void PlayerInputModel_OnScreenUntouched(object sender, PlayerInputModel.OnFingerMoovingEventArgs e)
+    private void PlayerInputModel_OnScreenUntouched(object sender, PlayerInput.OnFingerMoovingEventArgs e)
     {
         _fishnetGunView.Hide();
-        GameObject fishnet = _fishnetFactory.CreateFishnet();
+        GameObject fishnet = _fishnetSpawner.CreateFishnet();
         _fishnetGunModel.Fire(fishnet, e);
     }
 
-    private void PlayerInputModel_OnScreenTouched(object sender, PlayerInputModel.OnFingerMoovingEventArgs e)
+    private void PlayerInputModel_OnScreenTouched(object sender, PlayerInput.OnFingerMoovingEventArgs e)
     {
         _fishnetGunView.Show();
+
+        PlayerInputModel_OnFingerMoved(sender, e);
     }
 
     private void FishnetGunModel_OnSimulationStart(object sender, System.EventArgs e)
@@ -93,5 +75,15 @@ public class FishnetGunPresenter : MonoBehaviour
     private void FishnetGunModel_OnSimulationEnd(object sender, System.EventArgs e)
     {
         _fishnetGunView.UnbakeFishnetPositions();
+        _fishnetGunView.DeleteFishnet(_simulatingFishnet);
+        _simulatingFishnet = null;
+    }
+
+    public void Remove()
+    {
+        Deactivate();
+        _fishnetGunModel = null;
+        _fishnetGunView = null;
+        _fishnetSpawner = null;
     }
 }

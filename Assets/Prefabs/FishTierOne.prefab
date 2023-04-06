@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 58584417350591275}
-  - component: {fileID: -5739378107329725855}
+  - component: {fileID: 6414045570350182715}
   m_Layer: 0
   m_Name: FishTierOne
   m_TagString: Untagged
@@ -116,7 +116,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-5739378107329725855
+--- !u!114 &6414045570350182715
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,10 +125,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6793266304619996611}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc5be385d0e1b9f45b9b4dc4b4def4aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fc8565bc119e144c9b22826957ff28a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 5
-  _minSpeed: 2
-  _maxDeviationFromTheMovingDirection: {x: 10, y: -10}
-  _minDeviationFromTheMovingDirection: {x: -10, y: -10}

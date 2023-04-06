@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public class PlayerInputModel : MonoBehaviour
+public class PlayerInput : MonoBehaviour
 {
-    public static PlayerInputModel Instance { get; private set; }
+    public static PlayerInput Instance { get; private set; }
 
     public bool ScreenTouched { get; private set; }
     private Vector2 _firstTouch;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FishnetFactory : MonoBehaviour
+public class FishnetSpawner : MonoBehaviour
 {
     [SerializeField]
     private GameObject _fishnetPrefab;

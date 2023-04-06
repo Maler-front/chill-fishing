@@ -9,7 +9,6 @@ public class FishView : MonoBehaviour
     public void Move(Vector3 changePosition)
     {
         transform.forward = changePosition.normalized;
-        //transform.Translate(changePosition * Time.fixedDeltaTime);
         transform.position += changePosition * Time.fixedDeltaTime;
     }
 
@@ -22,7 +21,7 @@ public class FishView : MonoBehaviour
 
     private bool NeedToDie()
     {
-        return transform.position.magnitude > FishSpawner.MaxSpawnRadius;
+        return transform.position.magnitude > CameraAnalizer.SpawnRadius;
     }
 
     public void Die()

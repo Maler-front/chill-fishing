@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class FishnetGunView : MonoBehaviour
 {
     private LineRenderer _lineRenderer;
@@ -50,4 +51,6 @@ public class FishnetGunView : MonoBehaviour
 
         _fishnetPositions.Clear();
     }
+
+    public void DeleteFishnet(GameObject fishnet) => Destroy(fishnet);
 }
