@@ -1,5 +1,6 @@
 *.csproj
 
+.vs/
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -9,5 +10,9 @@ build/
 [Bb]uild/
 [Bb]uilds/
 [Ll]ibrary/
+[Ll]ogs/
+[Tt]emp/
+[Uu]serSettings/
+
 *.sln
 *.vsconfig

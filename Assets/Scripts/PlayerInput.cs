@@ -5,9 +5,6 @@ public class PlayerInput : MonoBehaviour
 {
     public static PlayerInput Instance { get; private set; }
 
-    [SerializeField]
-    private GameObject _boat;
-
     public bool ScreenTouched { get; private set; }
     private Vector2 _firstTouch;
     private Vector2 _touchPreviousPosition;
