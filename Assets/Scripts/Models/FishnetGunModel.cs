@@ -46,11 +46,23 @@ public class FishnetGunModel
         Physics.autoSimulation = false;
 
         Fire(simulatingFishnet, e);
-        for (float timeLeft = CalculateFishnetFlyTime(fireArguments); timeLeft > 0f; timeLeft -= _simulationDeltaTime)
+
+#if UNITY_EDITOR
+        int i = 500;
+        do
         {
             Physics.Simulate(_simulationDeltaTime);
             points.Add(simulatingFishnet.transform.position);
-        }
+        } while (simulatingFishnet.transform.position.y >= 0f && i-- >= 0);
+        if (i < 0)
+            Debug.LogError("The simulation was forcibly interrupted!");
+#else
+        do
+        {
+            Physics.Simulate(_simulationDeltaTime);
+            points.Add(simulatingFishnet.transform.position);
+        } while (simulatingFishnet.transform.position.y >= 0f);
+#endif
 
         Physics.autoSimulation = true;
         OnSimulationEnd?.Invoke(this, EventArgs.Empty);
@@ -67,13 +79,6 @@ public class FishnetGunModel
         Vector2 directionNormalized2D = direction2D != Vector2.zero ? direction2D.normalized : -Vector2.up;
         Vector3 direction3D = new Vector3(directionNormalized2D.x, Mathf.Tan(_fireAngle / 180 * Mathf.PI), directionNormalized2D.y);
         return new FireArguments(direction3D, direction2D.magnitude);
-    }
-
-    private float CalculateFishnetFlyTime(FireArguments fireArguments)
-    {
-        float force = Mathf.Clamp(fireArguments.PlayerForce * _forceCoefficientForPlayer, _minForce, _maxForce);
-        float V = (fireArguments.Direction * force).magnitude;
-        return 2 * V * Mathf.Sin(_fireAngle / 180 * Mathf.PI) / -Physics.gravity.y;
     }
 
     private class FireArguments

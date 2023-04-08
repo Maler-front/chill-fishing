@@ -5,6 +5,7 @@ public class FishView : MonoBehaviour
 {
     public EventHandler OnDie;
     public EventHandler NeedToMove;
+    public EventHandler OnFishCatched;
 
     public void Move(Vector3 changePosition)
     {
@@ -27,5 +28,14 @@ public class FishView : MonoBehaviour
     public void Die()
     {
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out Fishnet fishnet))
+        {
+            OnFishCatched?.Invoke(this, EventArgs.Empty);
+            OnDie?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

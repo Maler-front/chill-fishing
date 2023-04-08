@@ -3,15 +3,14 @@ using UnityEngine;
 public class FishSpawner : MonoBehaviour
 {
     [SerializeField]
-    private Camera _camera;
-
-    [SerializeField]
     private GameObject _fishPrefab;
 
     [SerializeField][Range(.001f, 5f)]
     private float _timeTick;
     private float _currentTimeTick = 0f;
 
+    [SerializeField][Range(0, 100)]
+    private int _reward;
     [SerializeField]
     [Range(2, 10)]
     private float _fishMaxSpeed = 2f;
@@ -28,8 +27,6 @@ public class FishSpawner : MonoBehaviour
         _fishMaxSpeed = _fishMinSpeed > _fishMaxSpeed ? _fishMinSpeed : _fishMaxSpeed;
         _fishMaxDeviationFromTheMovingDirection.x = _fishMaxDeviationFromTheMovingDirection.x < _fishMinDeviationFromTheMovingDirection.x ? _fishMinDeviationFromTheMovingDirection.x : _fishMaxDeviationFromTheMovingDirection.x;
         _fishMaxDeviationFromTheMovingDirection.x = _fishMaxDeviationFromTheMovingDirection.y < _fishMinDeviationFromTheMovingDirection.y ? _fishMinDeviationFromTheMovingDirection.y : _fishMaxDeviationFromTheMovingDirection.y;
-
-        CameraAnalizer.CalculateSpawnRadius(_camera);
     }
 
     private void Update()
@@ -51,7 +48,7 @@ public class FishSpawner : MonoBehaviour
         if (!fish.TryGetComponent(out FishView fishView))
             Debug.LogError("Fish prefab on " + gameObject.name + " dont have FishView");
 
-        FishModel fishModel = new FishModel(_fishMinSpeed, _fishMaxSpeed, _fishMinDeviationFromTheMovingDirection, _fishMaxDeviationFromTheMovingDirection, spawnPosition);
+        FishModel fishModel = new FishModel(_fishMinSpeed, _fishMaxSpeed, _fishMinDeviationFromTheMovingDirection, _fishMaxDeviationFromTheMovingDirection, spawnPosition, _reward);
         new FishPresenter(fishView, fishModel);
     }
 }

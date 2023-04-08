@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 70772839437139358}
   - component: {fileID: 6481137942447335740}
   - component: {fileID: 3903396609613158543}
+  - component: {fileID: 8730421278835190883}
   m_Layer: 0
   m_Name: Fishnet
   m_TagString: Untagged
@@ -62,6 +63,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &8730421278835190883
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2294594329762422073}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.7983077, y: 0.29421866, z: 2.05445}
+  m_Center: {x: -0.037292123, y: 0.08302942, z: -0.016355515}
 --- !u!1 &7265349172566888360
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,33 +1,63 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(LineRenderer))]
 public class FishnetGunView : MonoBehaviour
 {
-    private LineRenderer _lineRenderer;
-    private List<Vector3> _fishnetPositions;
+    [SerializeField]
+    private LineRenderer _pathRenderer;
+    [SerializeField]
+    private LineRenderer _circleRenderer;
+    [SerializeField]
+    private float _circleRadius;
+    private List<Vector3> _fishnetsPositions;
+    private List<Vector3> _fishnetsVelosities;
 
     private void Awake()
     {
-        _fishnetPositions = new List<Vector3>();
-        _lineRenderer = GetComponent<LineRenderer>();
+        _fishnetsPositions = new List<Vector3>();
+        _fishnetsVelosities = new List<Vector3>();
         Hide();
     }
 
     public void Hide()
     {
-        _lineRenderer.positionCount = 0;
-        _lineRenderer.enabled = false;
+        _pathRenderer.positionCount = 0;
+        _pathRenderer.enabled = false;
+        _circleRenderer.positionCount = 0;
+        _circleRenderer.enabled = false;
     }
 
-    public void Show() => _lineRenderer.enabled = true;
+    public void Show()
+    {
+        _pathRenderer.enabled = true;
+        _circleRenderer.enabled = true;
+    }
 
     public void ReDraw(Vector3[] positions)
     {
         if (positions != null)
         {
-            _lineRenderer.positionCount = positions.Length;
-            _lineRenderer.SetPositions(positions);
+            ReDrawPath(positions);
+            positions[positions.Length - 1].y = 0f;
+            ReDrawCircle(positions[positions.Length - 1]);
+        }
+    }
+
+    private void ReDrawPath(Vector3[] positions)
+    {
+        _pathRenderer.positionCount = positions.Length;
+        _pathRenderer.SetPositions(positions);
+    }
+
+    private void ReDrawCircle(Vector3 center)
+    {
+        int circleDots = 30;
+        float step = (360f / circleDots) / 180 * Mathf.PI;
+
+        _circleRenderer.positionCount = circleDots + 2;
+        for (int i = 0; i < circleDots + 2; i++)
+        {
+            _circleRenderer.SetPosition(i, new Vector3(center.x + _circleRadius * Mathf.Cos(step * i), 0f, center.z + _circleRadius * Mathf.Sin(step * i)));
         }
     }
 
@@ -35,8 +65,9 @@ public class FishnetGunView : MonoBehaviour
     {
         foreach (Fishnet component in transform.GetComponentsInChildren<Fishnet>())
         {
-            _fishnetPositions.Add(component.transform.position);
-            component.GetComponent<Rigidbody>().useGravity = false;
+            _fishnetsPositions.Add(component.transform.position);
+            _fishnetsVelosities.Add(component.Rigidbody.velocity);
+            component.Rigidbody.useGravity = false;
         }
     }
 
@@ -45,11 +76,13 @@ public class FishnetGunView : MonoBehaviour
         int i = 0;
         foreach (Fishnet component in transform.GetComponentsInChildren<Fishnet>())
         {
-            component.transform.position = _fishnetPositions[i++];
-            component.GetComponent<Rigidbody>().useGravity = true;
+            component.transform.position = _fishnetsPositions[i];
+            component.Rigidbody.velocity = _fishnetsVelosities[i++];
+            component.Rigidbody.useGravity = true;
         }
 
-        _fishnetPositions.Clear();
+        _fishnetsPositions.Clear();
+        _fishnetsVelosities.Clear();
     }
 
     public void DeleteFishnet(GameObject fishnet) => Destroy(fishnet);

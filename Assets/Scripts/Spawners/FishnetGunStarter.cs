@@ -20,7 +20,7 @@ public class FishnetGunStarter : MonoBehaviour
 
     private void Start()
     {
-        GameObject fishnetGun = Instantiate(_fishnetGunPrefab, transform.parent);
+        GameObject fishnetGun = Instantiate(_fishnetGunPrefab, transform.parent.transform.position + new Vector3(0, 1f, 0), Quaternion.identity, transform.parent);
         if (!fishnetGun.TryGetComponent(out FishnetGunView fishnetGunView))
             Debug.LogError("FishnetGun prefab dont have FishnetGunView");
         if (!fishnetGun.TryGetComponent(out FishnetSpawner fishnetSpawner))

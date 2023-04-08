@@ -4,10 +4,13 @@ public class FishModel
 {
     public float Speed { get; private set; }
     public Vector2 MovingDirection { get; private set; }
+    public int Reward { get; private set; }
 
-    public FishModel(float fishMinSpeed, float fishMaxSpeed, Vector2 fishMinDeviationFromTheMovingDirection, Vector2 fishMaxDeviationFromTheMovingDirection, Vector3 spawnPosition)
+    public FishModel(float fishMinSpeed, float fishMaxSpeed, Vector2 fishMinDeviationFromTheMovingDirection, Vector2 fishMaxDeviationFromTheMovingDirection, Vector3 spawnPosition, int reward)
     {
         Speed = Random.Range(fishMinSpeed, fishMaxSpeed);
+
+        Reward = reward;
 
         Vector3 movingDirection3D = Vector3.zero - spawnPosition;
         MovingDirection = new Vector2(movingDirection3D.x, movingDirection3D.z);
