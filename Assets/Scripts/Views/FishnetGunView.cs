@@ -9,11 +9,13 @@ public class FishnetGunView : MonoBehaviour
     private LineRenderer _circleRenderer;
     [SerializeField]
     private float _circleRadius;
-    private List<Vector3> _fishnetPositions;
+    private List<Vector3> _fishnetsPositions;
+    private List<Vector3> _fishnetsVelosities;
 
     private void Awake()
     {
-        _fishnetPositions = new List<Vector3>();
+        _fishnetsPositions = new List<Vector3>();
+        _fishnetsVelosities = new List<Vector3>();
         Hide();
     }
 
@@ -63,8 +65,9 @@ public class FishnetGunView : MonoBehaviour
     {
         foreach (Fishnet component in transform.GetComponentsInChildren<Fishnet>())
         {
-            _fishnetPositions.Add(component.transform.position);
-            component.GetComponent<Rigidbody>().useGravity = false;
+            _fishnetsPositions.Add(component.transform.position);
+            _fishnetsVelosities.Add(component.Rigidbody.velocity);
+            component.Rigidbody.useGravity = false;
         }
     }
 
@@ -73,11 +76,13 @@ public class FishnetGunView : MonoBehaviour
         int i = 0;
         foreach (Fishnet component in transform.GetComponentsInChildren<Fishnet>())
         {
-            component.transform.position = _fishnetPositions[i++];
-            component.GetComponent<Rigidbody>().useGravity = true;
+            component.transform.position = _fishnetsPositions[i];
+            component.Rigidbody.velocity = _fishnetsVelosities[i++];
+            component.Rigidbody.useGravity = true;
         }
 
-        _fishnetPositions.Clear();
+        _fishnetsPositions.Clear();
+        _fishnetsVelosities.Clear();
     }
 
     public void DeleteFishnet(GameObject fishnet) => Destroy(fishnet);

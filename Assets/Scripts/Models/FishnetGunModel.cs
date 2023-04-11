@@ -54,6 +54,8 @@ public class FishnetGunModel
             Physics.Simulate(_simulationDeltaTime);
             points.Add(simulatingFishnet.transform.position);
         } while (simulatingFishnet.transform.position.y >= 0f && i-- >= 0);
+        if (i < 0)
+            Debug.LogError("The simulation was forcibly interrupted!");
 #else
         do
         {
