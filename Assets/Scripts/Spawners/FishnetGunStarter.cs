@@ -18,7 +18,7 @@ public class FishnetGunStarter : MonoBehaviour
     [Range(0.01f, 89.99f)]
     private float _fireAngle;
 
-    private void Start()
+    public void CreateFishnetGun()
     {
         GameObject fishnetGun = Instantiate(_fishnetGunPrefab, transform.parent.transform.position + new Vector3(0, 1f, 0), Quaternion.identity, transform.parent);
         if (!fishnetGun.TryGetComponent(out FishnetGunView fishnetGunView))

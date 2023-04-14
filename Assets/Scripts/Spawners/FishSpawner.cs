@@ -22,17 +22,17 @@ public class FishSpawner : MonoBehaviour
     [SerializeField]
     private Vector2 _fishMinDeviationFromTheMovingDirection;
 
-    private void Start()
+    public void FixSerializedData()
     {
         _fishMaxSpeed = _fishMinSpeed > _fishMaxSpeed ? _fishMinSpeed : _fishMaxSpeed;
         _fishMaxDeviationFromTheMovingDirection.x = _fishMaxDeviationFromTheMovingDirection.x < _fishMinDeviationFromTheMovingDirection.x ? _fishMinDeviationFromTheMovingDirection.x : _fishMaxDeviationFromTheMovingDirection.x;
         _fishMaxDeviationFromTheMovingDirection.x = _fishMaxDeviationFromTheMovingDirection.y < _fishMinDeviationFromTheMovingDirection.y ? _fishMinDeviationFromTheMovingDirection.y : _fishMaxDeviationFromTheMovingDirection.y;
     }
 
-    private void Update()
+    public void CheckSpawn()
     {
         _currentTimeTick -= Time.deltaTime;
-        if(_currentTimeTick <= 0)
+        if (_currentTimeTick <= 0)
         {
             SpawnFish();
             _currentTimeTick = _timeTick;

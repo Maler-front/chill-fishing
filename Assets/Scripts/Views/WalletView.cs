@@ -8,7 +8,6 @@ public class WalletView : MonoBehaviour
 
     public void ChangeCoinsTo(int coins)
     {
-        print(coins.ToString());
         _textMesh.text = coins.ToString();
     }
 }

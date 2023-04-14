@@ -28,7 +28,7 @@ public class FishnetGunModel
         _fireAngle = fireAngle;
     }
 
-    public void Fire(GameObject fishnet, PlayerInput.OnFingerMoovingEventArgs e)
+    public void Fire(GameObject fishnet, TouchController.OnFingerMoovingEventArgs e)
     {
         FireArguments fireArguments = CalculateFireArguments(e);
         float force = Mathf.Clamp(fireArguments.PlayerForce * _forceCoefficientForPlayer + _minForce, 0f, _maxForce);
@@ -36,7 +36,7 @@ public class FishnetGunModel
         fishnet.GetComponent<Rigidbody>().AddForce(impulseDirection * force, ForceMode.Impulse);
     }
 
-    public Vector3[] SimulateFishnetPath(GameObject simulatingFishnet, PlayerInput.OnFingerMoovingEventArgs e)
+    public Vector3[] SimulateFishnetPath(GameObject simulatingFishnet, TouchController.OnFingerMoovingEventArgs e)
     {
         FireArguments fireArguments = CalculateFireArguments(e);
 
@@ -73,7 +73,7 @@ public class FishnetGunModel
         return positions;
     }
 
-    private FireArguments CalculateFireArguments(PlayerInput.OnFingerMoovingEventArgs e)
+    private FireArguments CalculateFireArguments(TouchController.OnFingerMoovingEventArgs e)
     {
         Vector2 direction2D = e.movedTo - e.firstTouch;
         Vector2 directionNormalized2D = direction2D != Vector2.zero ? direction2D.normalized : -Vector2.up;
