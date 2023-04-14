@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FishnetGunPresenter : IPresenter, IRemovable
@@ -20,10 +19,10 @@ public class FishnetGunPresenter : IPresenter, IRemovable
 
     public void Activate()
     {
-        PlayerInput playerInput = PlayerInput.Instance;
-        playerInput.OnFingerMoved += PlayerInputModel_OnFingerMoved;
-        playerInput.OnScreenUntouched += PlayerInputModel_OnScreenUntouched;
-        playerInput.OnScreenTouched += PlayerInputModel_OnScreenTouched;
+        TouchController touchController = TouchController.Instance;
+        touchController.OnFingerMoved += TouchControllerModel_OnFingerMoved;
+        touchController.OnScreenUntouched += TouchControllerModel_OnScreenUntouched;
+        touchController.OnScreenTouched += TouchControllerModel_OnScreenTouched;
 
         _fishnetGunModel.OnSimulationStart += FishnetGunModel_OnSimulationStart;
         _fishnetGunModel.OnSimulationEnd += FishnetGunModel_OnSimulationEnd;
@@ -31,16 +30,16 @@ public class FishnetGunPresenter : IPresenter, IRemovable
 
     public void Deactivate()
     {
-        PlayerInput playerInput = PlayerInput.Instance;
-        playerInput.OnFingerMoved -= PlayerInputModel_OnFingerMoved;
-        playerInput.OnScreenUntouched -= PlayerInputModel_OnScreenUntouched;
-        playerInput.OnScreenTouched -= PlayerInputModel_OnScreenTouched;
+        TouchController touchController = TouchController.Instance;
+        touchController.OnFingerMoved -= TouchControllerModel_OnFingerMoved;
+        touchController.OnScreenUntouched -= TouchControllerModel_OnScreenUntouched;
+        touchController.OnScreenTouched -= TouchControllerModel_OnScreenTouched;
 
         _fishnetGunModel.OnSimulationStart -= FishnetGunModel_OnSimulationStart;
         _fishnetGunModel.OnSimulationEnd -= FishnetGunModel_OnSimulationEnd;
     }
 
-    private void PlayerInputModel_OnFingerMoved(object sender, PlayerInput.OnFingerMoovingEventArgs e)
+    private void TouchControllerModel_OnFingerMoved(object sender, TouchController.OnFingerMoovingEventArgs e)
     {
         GameObject fishnet = _fishnetSpawner.CreateFishnet(isFishnetNeedToBeSimuleted: true);
         _simulatingFishnet = fishnet;
@@ -53,18 +52,18 @@ public class FishnetGunPresenter : IPresenter, IRemovable
             );
     }
 
-    private void PlayerInputModel_OnScreenUntouched(object sender, PlayerInput.OnFingerMoovingEventArgs e)
+    private void TouchControllerModel_OnScreenUntouched(object sender, TouchController.OnFingerMoovingEventArgs e)
     {
         _fishnetGunView.Hide();
         GameObject fishnet = _fishnetSpawner.CreateFishnet();
         _fishnetGunModel.Fire(fishnet, e);
     }
 
-    private void PlayerInputModel_OnScreenTouched(object sender, PlayerInput.OnFingerMoovingEventArgs e)
+    private void TouchControllerModel_OnScreenTouched(object sender, TouchController.OnFingerMoovingEventArgs e)
     {
         _fishnetGunView.Show();
 
-        PlayerInputModel_OnFingerMoved(sender, e);
+        TouchControllerModel_OnFingerMoved(sender, e);
     }
 
     private void FishnetGunModel_OnSimulationStart(object sender, System.EventArgs e)
