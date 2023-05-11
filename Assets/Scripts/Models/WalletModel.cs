@@ -7,20 +7,25 @@ public class WalletModel
 
     public int coins { get; private set; }
 
-    public EventHandler OnCoinsChanged;
+    public Action<int> OnCoinsChanged;
 
     public WalletModel()
     {
-        if (Instance != null)
-            Debug.LogError("Singleton error (in WalletModel class)!");
+        if (Instance == null)
+            Instance = this;
+    }
 
-        Instance = this;
+    public WalletModel(int startCoins)
+    {
+        coins = startCoins;
+        if (Instance == null)
+            Instance = this;
     }
 
     public void AddCoins(int value)
     {
         coins += value;
-        OnCoinsChanged?.Invoke(this, EventArgs.Empty);
+        OnCoinsChanged?.Invoke(coins);
     }
 
     public bool TrySpendCoins(int value)
@@ -29,7 +34,7 @@ public class WalletModel
             return false;
 
         coins -= value;
-        OnCoinsChanged?.Invoke(this, EventArgs.Empty);
+        OnCoinsChanged?.Invoke(coins);
         return true;
     }
 }

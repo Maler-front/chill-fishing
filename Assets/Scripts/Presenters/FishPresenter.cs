@@ -11,18 +11,18 @@ public class FishPresenter : IPresenter, IRemovable
         Activate();
     }
 
-    private void FishView_OnDie(object sender, System.EventArgs e)
+    private void FishView_OnDie()
     {
         _fishView.Die();
         Remove();
     }
 
-    private void FishView_NeedToMove(object sender, System.EventArgs e)
+    private void FishView_NeedToMove()
     {
         _fishView.Move(_fishModel.GetChangePosition());
     }
 
-    private void FishView_OnFishCatched(object sender, System.EventArgs e)
+    private void FishView_OnFishCatched()
     {
         WalletModel.Instance.AddCoins(_fishModel.Reward);
     }

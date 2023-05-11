@@ -1,10 +1,8 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Fishnet : MonoBehaviour
 {
-    private const string WATER_TAG = "Water";
     public Rigidbody Rigidbody { get; private set; }
 
     private void Awake()
@@ -19,7 +17,7 @@ public class Fishnet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(WATER_TAG))
+        if (other.CompareTag(Tags.WATER))
         {
             Rigidbody.drag = 3f;
         }

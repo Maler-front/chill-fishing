@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FishSpawner : MonoBehaviour
+public class FishSpawner : EntryLeaf
 {
     [SerializeField]
     private GameObject _fishPrefab;
@@ -8,6 +8,9 @@ public class FishSpawner : MonoBehaviour
     [SerializeField][Range(.001f, 5f)]
     private float _timeTick;
     private float _currentTimeTick = 0f;
+
+    [SerializeField]
+    private CameraAnalizer _camera;
 
     [SerializeField][Range(0, 100)]
     private int _reward;
@@ -22,14 +25,16 @@ public class FishSpawner : MonoBehaviour
     [SerializeField]
     private Vector2 _fishMinDeviationFromTheMovingDirection;
 
-    public void FixSerializedData()
+    protected override void StartComponent()
     {
         _fishMaxSpeed = _fishMinSpeed > _fishMaxSpeed ? _fishMinSpeed : _fishMaxSpeed;
         _fishMaxDeviationFromTheMovingDirection.x = _fishMaxDeviationFromTheMovingDirection.x < _fishMinDeviationFromTheMovingDirection.x ? _fishMinDeviationFromTheMovingDirection.x : _fishMaxDeviationFromTheMovingDirection.x;
         _fishMaxDeviationFromTheMovingDirection.x = _fishMaxDeviationFromTheMovingDirection.y < _fishMinDeviationFromTheMovingDirection.y ? _fishMinDeviationFromTheMovingDirection.y : _fishMaxDeviationFromTheMovingDirection.y;
+
+        base.StartComponent();
     }
 
-    public void CheckSpawn()
+    protected override void UpdateComponent()
     {
         _currentTimeTick -= Time.deltaTime;
         if (_currentTimeTick <= 0)
@@ -37,12 +42,14 @@ public class FishSpawner : MonoBehaviour
             SpawnFish();
             _currentTimeTick = _timeTick;
         }
+
+        base.UpdateComponent();
     }
 
     private void SpawnFish()
     {
         Vector2 randomPointInSphere = Random.insideUnitCircle.normalized;
-        Vector3 spawnPosition = new Vector3(randomPointInSphere.x, 0f, randomPointInSphere.y) * CameraAnalizer.SpawnRadius;
+        Vector3 spawnPosition = new Vector3(randomPointInSphere.x, 0f, randomPointInSphere.y) * _camera.SpawnRadius;
         GameObject fish = Instantiate(_fishPrefab, spawnPosition, Quaternion.identity, transform);
 
         if (!fish.TryGetComponent(out FishView fishView))

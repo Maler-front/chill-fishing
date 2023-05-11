@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TouchController : MonoBehaviour
+public class TouchController : EntryLeaf
 {
     public static TouchController Instance { get; private set; }
 
@@ -10,27 +10,33 @@ public class TouchController : MonoBehaviour
     private Vector2 _firstTouch;
     private Vector2 _touchPreviousPosition;
 
-    public EventHandler<OnFingerMoovingEventArgs> OnScreenUntouched;
-    public EventHandler<OnFingerMoovingEventArgs> OnScreenTouched;
-    public EventHandler<OnFingerMoovingEventArgs> OnFingerMoved;
-    public class OnFingerMoovingEventArgs : EventArgs
+    public Action<OnFingerMoovingEventArgs> OnScreenUntouched;
+    public Action<OnFingerMoovingEventArgs> OnScreenTouched;
+    public Action<OnFingerMoovingEventArgs> OnFingerMoved;
+    public class OnFingerMoovingEventArgs
     {
         public Vector2 firstTouch;
         public Vector2 movedFrom;
         public Vector2 movedTo;
     }
 
-    public void CreateInstance()
+    protected override void AwakeComponent()
     {
-        if (Instance != null)
-            Debug.LogError("Singleton error (in TouchController class)!");
+        if (Instance == null)
+            Instance = this;
 
-        Instance = this;
+        base.AwakeComponent();
+    }
+
+    protected override void UpdateComponent()
+    {
+        AnalizeTouch();
+        base.UpdateComponent();
     }
 
     public void AnalizeTouch()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && !Pause.Instance.Paused)
         {
             foreach(Touch touch in Input.touches)
             {
@@ -48,7 +54,7 @@ public class TouchController : MonoBehaviour
                     {
                         _firstTouch = currenTouch.position;
                         _touchPreviousPosition = currenTouch.position;
-                        OnScreenTouched?.Invoke(this, new OnFingerMoovingEventArgs
+                        OnScreenTouched?.Invoke(new OnFingerMoovingEventArgs
                         {
                             firstTouch = _firstTouch,
                             movedFrom = _firstTouch,
@@ -58,7 +64,7 @@ public class TouchController : MonoBehaviour
                     }
                 case TouchPhase.Moved:
                     {
-                        OnFingerMoved?.Invoke(this, new OnFingerMoovingEventArgs
+                        OnFingerMoved?.Invoke(new OnFingerMoovingEventArgs
                         {
                             firstTouch = _firstTouch,
                             movedFrom = _touchPreviousPosition,
@@ -70,7 +76,7 @@ public class TouchController : MonoBehaviour
                     }
                 case TouchPhase.Ended:
                     {
-                        OnScreenUntouched?.Invoke(this, new OnFingerMoovingEventArgs
+                        OnScreenUntouched?.Invoke(new OnFingerMoovingEventArgs
                         {
                             firstTouch = _firstTouch,
                             movedFrom = _touchPreviousPosition,
@@ -80,5 +86,11 @@ public class TouchController : MonoBehaviour
                     }
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Instance = null;
+        base.DisableComponent();
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FishnetGunStarter : MonoBehaviour
+public class FishnetGunStarter : EntryLeaf
 {
     [SerializeField]
     private GameObject _fishnetGunPrefab;
@@ -17,6 +17,13 @@ public class FishnetGunStarter : MonoBehaviour
     [SerializeField]
     [Range(0.01f, 89.99f)]
     private float _fireAngle;
+
+    protected override void StartComponent()
+    {
+        CreateFishnetGun();
+
+        base.StartComponent();
+    }
 
     public void CreateFishnetGun()
     {

@@ -10,8 +10,8 @@ public class FishnetGunModel
     private readonly float _forceCoefficientForPlayer;
     private readonly float _fireAngle;
 
-    public EventHandler OnSimulationStart;
-    public EventHandler OnSimulationEnd;
+    public Action OnSimulationStart;
+    public Action OnSimulationEnd;
 
     public FishnetGunModel(
         float simulationDeltaTime,
@@ -42,7 +42,7 @@ public class FishnetGunModel
 
         List<Vector3> points = new List<Vector3>();
 
-        OnSimulationStart?.Invoke(this, EventArgs.Empty);
+        OnSimulationStart?.Invoke();
         Physics.autoSimulation = false;
 
         Fire(simulatingFishnet, e);
@@ -65,7 +65,7 @@ public class FishnetGunModel
 #endif
 
         Physics.autoSimulation = true;
-        OnSimulationEnd?.Invoke(this, EventArgs.Empty);
+        OnSimulationEnd?.Invoke();
 
         Vector3[] positions = new Vector3[points.Count];
         points.CopyTo(positions);

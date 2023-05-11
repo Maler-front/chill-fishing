@@ -9,21 +9,22 @@ public class WalletPresenter : IPresenter
     {
         _walletView = walletView;
         _walletModel = WalletModel.Instance;
+        _walletView.ChangeCoinsTo(WalletModel.Instance.coins);
         Activate();
     }
 
     public void Activate()
     {
-        WalletModel.Instance.OnCoinsChanged += WalletModel_OnCoinsChanged;
+        _walletModel.OnCoinsChanged += WalletModel_OnCoinsChanged;
     }
 
     public void Deactivate()
     {
-        WalletModel.Instance.OnCoinsChanged -= WalletModel_OnCoinsChanged;
+        _walletModel.OnCoinsChanged -= WalletModel_OnCoinsChanged;
     }
 
-    private void WalletModel_OnCoinsChanged(object sender, EventArgs e)
+    private void WalletModel_OnCoinsChanged(int coins)
     {
-        _walletView.ChangeCoinsTo(WalletModel.Instance.coins);
+        _walletView.ChangeCoinsTo(coins);
     }
 }

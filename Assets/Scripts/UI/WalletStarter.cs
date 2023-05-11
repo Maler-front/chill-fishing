@@ -1,15 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class WalletStarter : MonoBehaviour
+public class WalletStarter : EntryLeaf
 {
     [SerializeField]
     private GameObject _walletPrefab;
 
+    protected override void AwakeComponent()
+    {
+        CreateWalletModel();
+
+        base.AwakeComponent();
+    }
+
+    protected override void StartComponent()
+    {
+        CreateWalletVP();
+
+        base.StartComponent();
+    }
+
     public void CreateWalletModel()
     {
-        new WalletModel();
+        if(WalletModel.Instance == null)
+            new WalletModel();
     }
 
     public void CreateWalletVP()

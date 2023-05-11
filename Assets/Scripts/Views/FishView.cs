@@ -3,26 +3,29 @@ using UnityEngine;
 
 public class FishView : MonoBehaviour
 {
-    public EventHandler OnDie;
-    public EventHandler NeedToMove;
-    public EventHandler OnFishCatched;
+    [SerializeField] private CameraAnalizer _cameraAnalizer;
+
+    public Action OnDie;
+    public Action NeedToMove;
+    public Action OnFishCatched;
 
     public void Move(Vector3 changePosition)
     {
         transform.forward = changePosition.normalized;
-        transform.position += changePosition * Time.fixedDeltaTime;
+        transform.Translate(transform.InverseTransformVector(changePosition * Time.fixedDeltaTime));
     }
 
     private void FixedUpdate()
     {
-        NeedToMove?.Invoke(this, EventArgs.Empty);
+        NeedToMove?.Invoke();
         if (NeedToDie())
-            OnDie?.Invoke(this, EventArgs.Empty);
+            OnDie?.Invoke();
     }
 
     private bool NeedToDie()
     {
-        return transform.position.magnitude > CameraAnalizer.SpawnRadius;
+        return false;
+        /*return transform.position.magnitude > _cameraAnalizer.SpawnRadius;*/
     }
 
     public void Die()
@@ -34,8 +37,8 @@ public class FishView : MonoBehaviour
     {
         if (other.TryGetComponent(out Fishnet fishnet))
         {
-            OnFishCatched?.Invoke(this, EventArgs.Empty);
-            OnDie?.Invoke(this, EventArgs.Empty);
+            OnFishCatched?.Invoke();
+            OnDie?.Invoke();
         }
     }
 }
